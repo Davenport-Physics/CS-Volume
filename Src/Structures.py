@@ -10,8 +10,7 @@ class Structure(object):
     #Radians  = True tells the program to use radians through trigonometric calculations
     #Debug    = False tells the program to not print out information that can aid during the debugging process
     #Filename = "Data" tells the program to write to a file called Data
-    #Spread   = False tells the program to not spread a value given to the ChangeTempVolume function
-    def __init__(self, Radians = True, Debug = False, Filename = "Data", Spread = False):
+    def __init__(self, Radians = True, Debug = False, Filename = "Data"):
 
         self.Radians  = Radians
         self.Debug    = Debug
@@ -100,24 +99,15 @@ class Structure(object):
     #Might may DetermineTempVectorbyConstant return a list to remedy.
     def ChangeTempVolume(self, constant, diff):
 
-        if (self.Spread == False):
-            if (constant == 'a'):
-                self.temp_vector_a.ModifyComponent(0, diff)
-            elif (constant == 'b'):
-                self.temp_vector_b.ModifyComponent(1, diff)
-            elif (constant == 'c'):
-                self.temp_vector_c.ModifyComponent(2, diff)
-            else:
-                print("Was not given a proper constant")
-                return
+        if (constant == 'a'):
+            self.temp_vector_a.ModifyComponent(0, diff)
+        elif (constant == 'b'):
+            self.temp_vector_b.ModifyComponent(1, diff)
+        elif (constant == 'c'):
+            self.temp_vector_c.ModifyComponent(2, diff)
         else:
-            temp_vector = DetermineTempVectorbyConstant(constant)
-
-            if (type(temp_vector) != Vector):
-                print("Was not given a proper constant")
-                return
-
-            temp_vector.SpreadValueAcrossComponents(diff)
+            print("Was not given a proper constant")
+            return
 
         #If the else statement was not called, this method is called to Recalculate
         #the temp angles given the fact that the volume has changed.
@@ -204,6 +194,21 @@ class Monoclinic(Structure):
                 print("sin(%f) = %f" % (self.beta, self.Sin_DegToRad(self.beta)))
 
             print("")
+
+    def ChangeTempVolume(self, constant, diff):
+
+        #Makes assumptions to where the perpendicular vectors are. I haven't
+        #encountered a POSCAR file that is any different, however I see no reason
+        #why there wouldn't be. In any event, this code will result in a cell losing
+        #it's initial strucutre if the assumptions are incorrect.
+        if (constant == 'a'):
+            self.temp_vector_a.ModifyComponent(0, diff)
+        elif (constant == 'b'):
+            self.temp_vector_a.ModifyComponent(0, diff)
+        elif (constant == 'c'):
+            self.temp_vector_a.SpreadValueAcrossComponents([0, 2], diff)
+        else:
+            print("Invalid constant passed")
 
     def GetVolume(self):
 

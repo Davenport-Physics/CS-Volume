@@ -50,7 +50,7 @@ def init():
     if (struct_type == 1):
         obj = Monoclinic(Radians = radians, Debug = debug)
     elif(struct_type == 2):
-        obj = Cubic(Radians = radians, Debug = debug, Spread = True)
+        obj = Cubic(Radians = radians, Debug = debug)
     else:
         print("Something went wrong")
         return False

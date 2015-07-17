@@ -24,7 +24,7 @@ class Vector(object):
 
     #This will unfortunately result in some error, however I don't think it's
     #too significant for POSCAR related manipulation
-    def SpreadValueAcrossComponents(self, val):
+    def SpreadValueAcrossAllComponents(self, val):
 
         temp = val/3
         for i in range(len(self.components)):
@@ -32,6 +32,22 @@ class Vector(object):
                 self.components[i] -= abs(temp)
             else:
                 self.components[i] += abs(temp)
+
+    #indices must be a list of index's that will be changed throughout the vector
+    def SpreadValueAcrossComponents(self, indices, val):
+
+        temp = val/(len(indices))
+
+        if (len(indices) > len(self.components)):
+            print("Too many indices provided for vector")
+            return
+
+        for i in range(len(indices)):
+            if (self.components[indices[i]] < 0):
+                self.components[indices[i]] -= abs(temp)
+            else:
+                self.components[indices[i]] += abs(temp)
+
 
     def SetComponent(self, index, value):
 
